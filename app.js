@@ -240,7 +240,33 @@ function renderStations(list, cheapest) {
   const bestCardContainer = document.getElementById("bestCard");
   renderBestCard(cheapest, bestCardContainer);
 
-  list.forEach(s => {
+  list.forEach((s, i) => {
+
+    /* -----------------------------------------
+       ANUNCIO CADA 5 GASOLINERAS
+    ----------------------------------------- */
+    if (i > 0 && i % 5 === 0) {
+      const ad = document.createElement("div");
+      ad.innerHTML = `
+        <ins class="adsbygoogle"
+             style="display:block; margin: 12px 0;"
+             data-ad-client="ca-pub-7902959475180328"
+             data-ad-slot="2752355337"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      `;
+      gasListEl.appendChild(ad);
+
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.warn("AdSense no cargó todavía:", e);
+      }
+    }
+
+    /* -----------------------------------------
+       TARJETA NORMAL
+    ----------------------------------------- */
     const item = document.createElement("article");
     item.className = "gas-item";
 
@@ -268,6 +294,7 @@ function renderStations(list, cheapest) {
     gasListEl.appendChild(item);
   });
 }
+
 
 /* -----------------------------------------
    TARJETA MÁS BARATA PREMIUM 2.0
@@ -378,3 +405,23 @@ function haversine(lat1, lon1, lat2, lon2) {
 
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+
+  const btn = document.getElementById("btn-instalar");
+  btn.style.display = "block";
+
+  btn.addEventListener("click", () => {
+    btn.style.display = "none";
+    deferredPrompt.prompt();
+
+    deferredPrompt.userChoice.then((choice) => {
+      deferredPrompt = null;
+    });
+  });
+});
+

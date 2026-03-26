@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gasolineras Cercanas</title>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7902959475180328"
+     crossorigin="anonymous"></script>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -26,6 +29,9 @@
   <h1>Gasolineras Cercanas</h1>
   <p>Encuentra la más barata cerca de ti</p>
 </header>
+<button id="btn-instalar" style="display:none;">
+  Instalar aplicación
+</button>
 
 <main>
 
@@ -51,22 +57,56 @@
   <!-- Layout mapa + lista -->
   <section class="layout-split">
 
-    <div class="map-container">
-      <div id="map">
-        <button id="locateBtn" class="locate-btn">📍</button>
-      </div>
+  <div class="map-container">
+    <div id="map">
+      <button id="locateBtn" class="locate-btn">📍</button>
     </div>
+  </div>
 
-    <div class="gas-list" id="gasList"></div>
+  <div class="gas-list" id="gasList"></div>
 
-  </section>
+  <!-- Panel lateral de anuncios (solo escritorio) -->
+  <aside class="side-ads">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-7902959475180328"
+         data-ad-slot="2752355337"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <ins class="adsbygoogle"
+         style="display:block; margin-top:20px;"
+         data-ad-client="ca-pub-7902959475180328"
+         data-ad-slot="2752355337"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </aside>
+
+</section>
+
 
 </main>
 
 <!-- Sticky AdSense -->
 <div id="sticky-ad">
-  <!-- Aquí irá tu anuncio -->
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-7902959475180328"
+       data-ad-slot="5216934820"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
 </div>
+
+
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
