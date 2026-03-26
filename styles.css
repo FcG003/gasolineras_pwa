@@ -1,0 +1,405 @@
+:root {
+  --primary: #0d6efd;
+  --bg: #f5f6f8;
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --highlight: #ecfdf5;
+  --highlight-border: #10b981;
+
+  /* Bordes y sombras consistentes */
+  --radius: 12px;
+  --shadow-soft: 0 2px 5px rgba(0,0,0,0.06);
+  --shadow-medium: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-strong: 0 6px 18px rgba(16,185,129,0.22);
+}
+
+/* ------------------------------
+   BASE
+------------------------------ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  padding-bottom: 90px;
+  line-height: 1.55;
+}
+
+/* ------------------------------
+   HEADER
+------------------------------ */
+
+header {
+  background: var(--primary);
+  color: #fff;
+  padding: 1.4rem;
+  text-align: center;
+  box-shadow: var(--shadow-medium);
+  border-radius: var(--radius);
+}
+
+header h1 {
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+header p {
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* ------------------------------
+   LAYOUT PRINCIPAL
+------------------------------ */
+
+main {
+  max-width: 1300px;
+  margin: 1rem auto;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* ------------------------------
+   TARJETA DE CONTROLES
+------------------------------ */
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.controls select {
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid #d1d5db;
+  background: #fff;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ------------------------------
+   LAYOUT MAPA + LISTA
+------------------------------ */
+
+.layout-split {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .layout-split {
+    flex-direction: row;
+  }
+
+  .map-container {
+    flex: 0 0 55%;
+  }
+
+  .gas-list {
+    flex: 0 0 45%;
+  }
+}
+
+/* ------------------------------
+   MAPA
+------------------------------ */
+
+.map-container {
+  flex: 1;
+  height: 330px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  box-shadow: var(--shadow-medium);
+  opacity: 0;
+  animation: fadeInUp .4s ease-out forwards;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------
+   LISTADO
+------------------------------ */
+
+.gas-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-height: 75vh;
+  overflow-y: auto;
+  padding-top: 6px;
+}
+
+/* ------------------------------
+   TARJETAS DE GASOLINERAS
+------------------------------ */
+
+.gas-item {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-soft);
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.4rem;
+
+  opacity: 0;
+  animation: fadeInUp .35s ease-out forwards;
+}
+
+.gas-item:nth-child(1) { animation-delay: .05s; }
+.gas-item:nth-child(2) { animation-delay: .10s; }
+.gas-item:nth-child(3) { animation-delay: .15s; }
+.gas-item:nth-child(4) { animation-delay: .20s; }
+.gas-item:nth-child(5) { animation-delay: .25s; }
+
+.gas-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.gas-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.gas-address {
+  font-size: .8rem;
+  color: var(--text-muted);
+}
+
+.gas-meta {
+  font-size: .75rem;
+  color: #4b5563;
+}
+
+.gas-price {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.fuel-type {
+  font-size: 0.7rem;
+  color: #4b5563;
+  margin-top: 2px;
+}
+
+/* ------------------------------
+   TARJETA MÁS BARATA PREMIUM 2.0
+------------------------------ */
+
+.gas-item.best {
+  border: 2px solid var(--highlight-border);
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  box-shadow: var(--shadow-strong);
+  padding: 1.2rem;
+  animation: bestPop .45s ease-out forwards !important;
+  opacity: 1 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.best-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.best-icon {
+  font-size: 1.3rem;
+}
+
+.best-label {
+  background: #10b981;
+  color: white;
+  padding: 3px 8px;
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.best-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.best-price {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #047857;
+}
+
+.best-distance {
+  font-size: 0.9rem;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.best-address {
+  font-size: 0.8rem;
+  color: #4b5563;
+  margin-bottom: 6px;
+}
+
+.best-route-btn {
+  margin-top: 6px;
+  background: #10b981;
+  color: white;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .2s ease;
+}
+
+.best-route-btn:hover {
+  background: #059669;
+}
+
+/* ------------------------------
+   SKELETON LOADING
+------------------------------ */
+
+.skeleton-card {
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  opacity: 0;
+  animation: fadeInUp .3s ease-out forwards;
+}
+
+.skeleton {
+  background: #e5e7eb;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.6) 50%,
+    rgba(255,255,255,0) 100%
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+/* ------------------------------
+   ANIMACIONES SUAVES
+------------------------------ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bestPop {
+  0% {
+    opacity: 0;
+    transform: scale(.92) translateY(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ------------------------------
+   ADSENSE
+------------------------------ */
+
+#sticky-ad {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  padding: 6px 0;
+  box-shadow: var(--shadow-medium);
+  z-index: 99999;
+  text-align: center;
+}
+
+.locate-btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform .15s ease, background .2s ease;
+}
+
+.locate-btn:hover {
+  background: #0b5ed7;
+  transform: scale(1.07);
+}
+
+.map-container {
+  position: relative;
+}

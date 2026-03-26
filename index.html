@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gasolineras Cercanas</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <!-- MarkerCluster CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#0d6efd">
+
+</head>
+
+<body>
+
+<header>
+  <h1>Gasolineras Cercanas</h1>
+  <p>Encuentra la más barata cerca de ti</p>
+</header>
+
+<main>
+
+  <!-- Controles -->
+  <section class="card">
+    <div class="controls">
+      <select id="sortSelect">
+        <option value="distance">Ordenar por distancia</option>
+        <option value="price">Ordenar por precio</option>
+      </select>
+
+      <select id="fuelFilter">
+        <option value="Precio Gasolina 95 E5">Gasolina 95 E5</option>
+        <option value="Precio Gasolina 98 E5">Gasolina 98 E5</option>
+        <option value="Precio Gasoleo A">Gasóleo A</option>
+        <option value="Precio Gasoleo Premium">Gasóleo Premium</option>
+      </select>
+    </div>
+
+    <p id="status"></p>
+  </section>
+
+  <!-- Layout mapa + lista -->
+  <section class="layout-split">
+
+    <div class="map-container">
+      <div id="map">
+        <button id="locateBtn" class="locate-btn">📍</button>
+      </div>
+    </div>
+
+    <div class="gas-list" id="gasList"></div>
+
+  </section>
+
+</main>
+
+<!-- Sticky AdSense -->
+<div id="sticky-ad">
+  <!-- Aquí irá tu anuncio -->
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- MarkerCluster JS -->
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+
+<!-- App -->
+<script src="app.js"></script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+  }
+</script>
+</body>
+</html>

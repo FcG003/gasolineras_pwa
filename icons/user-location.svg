@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" width="200" height="240">
+  <defs>
+    <linearGradient id="grad-naranja-ext" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F28C28;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#D35400;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad-naranja-int" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E67E22;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#A04000;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <path d="M50 5 C30 5 15 21 15 41 C15 65 50 110 50 110 C50 110 85 65 85 41 C85 21 70 5 50 5Z" 
+        fill="url(#grad-naranja-ext)" stroke="#A04000" stroke-width="1.5"/>
+
+  <circle cx="50" cy="41" r="28" fill="white" opacity="0.9"/>
+
+  <circle cx="50" cy="41" r="22" fill="url(#grad-naranja-int)"/>
+
+  <path d="M68 45 L66 38 C65 35 63 33 60 33 L40 33 C37 33 35 35 34 38 L32 45 C30 45 30 47 30 48 L30 54 C30 55 31 56 32 56 L34 56 L34 58 C34 59 35 60 36 60 L38 60 C39 60 40 59 40 58 L40 56 L60 56 L60 58 C60 59 61 60 62 60 L64 60 C65 60 66 59 66 58 L66 56 L68 56 C69 56 70 55 70 54 L70 48 C70 47 70 45 68 45 Z M40 36 L60 36 L63 44 L37 44 L40 36 Z" 
+        fill="white"/>
+  
+  <circle cx="37" cy="50" r="2" fill="white" opacity="0.5"/>
+  <circle cx="63" cy="50" r="2" fill="white" opacity="0.5"/>
+</svg>
