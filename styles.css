@@ -136,10 +136,18 @@ main {
     flex: 0 0 220px;
   }
 }
+.adsbygoogle {
+  display: block !important;
+  min-height: 90px; /* tamaño mínimo elegante */
+  margin: 0 auto;
+}
 
 /* ------------------------------
    PANEL LATERAL DE ANUNCIOS
 ------------------------------ */
+.side-ads .adsbygoogle {
+  min-height: 250px;
+}
 
 .side-ads {
   display: none;
@@ -159,6 +167,11 @@ main {
     margin-top: 0.6rem;
   }
 }
+.gas-ad {
+  min-height: 200px;
+  margin: 0.5rem 0;
+}
+
 
 /* ------------------------------
    MAPA
