@@ -7,19 +7,46 @@ let userLocation = null;
 let stationsRaw = [];
 let stationsProcessed = [];
 
-let bestRouteLine = null; // ← NUEVO: línea hacia la gasolinera más barata
+let bestRouteLine = null;
 
 const RADIUS_KM = 8;
 
 /* -----------------------------------------
-   RECUPERAR CARBURANTE PREFERIDO
+   APLICAR CARBURANTE PREFERIDO AL ARRANCAR
 ----------------------------------------- */
-window.addEventListener("DOMContentLoaded", () => {
+{
   const savedFuel = localStorage.getItem("preferredFuel");
+
   if (savedFuel) {
-    fuelFilterSelect.value = savedFuel;
+    const exists = [...fuelFilterSelect.options].some(o => o.value === savedFuel);
+    if (exists) {
+      fuelFilterSelect.value = savedFuel;   // ⭐ El combo arranca ya con el valor correcto
+    }
   }
-});
+}
+
+/* -----------------------------------------
+   GET ADBLUE PRICE
+----------------------------------------- */
+function getAdBluePrice(raw) {
+  for (const key in raw) {
+    const normalized = key.normalize("NFKD").toLowerCase().replace(/\s+/g, "");
+
+    // Buscar cualquier campo que contenga "adblue"
+    if (normalized.includes("precioadblue")) {
+      const val = raw[key].trim().replace(",", ".");
+      const num = parseFloat(val);
+
+      if (!isNaN(num) && num > 0) {
+        return num;
+      }
+    }
+  }
+
+  return null;
+}
+
+
 
 /* -----------------------------------------
    GUARDAR CARBURANTE PREFERIDO
@@ -30,7 +57,7 @@ fuelFilterSelect.addEventListener("change", () => {
 });
 
 /* -----------------------------------------
-   MAPA LEAFLET + CLÚSTER
+   MAPA LEAFLET
 ----------------------------------------- */
 let map = L.map('map');
 let markersLayer = L.markerClusterGroup({
@@ -47,23 +74,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 document.getElementById("locateBtn").addEventListener("click", () => {
   if (!userLocation) return;
 
-  // Zoom alto para descolapsar clústeres
   map.setView([userLocation.lat, userLocation.lng], 16, {
     animate: true,
     duration: 0.6
   });
 
-
-  // Descolapsar el clúster donde está la más barata
   if (window.cheapestMarker) {
     markersLayer.zoomToShowLayer(window.cheapestMarker);
   }
 });
 
-
-
 /* -----------------------------------------
-   ICONOS PERSONALIZADOS
+   ICONOS
 ----------------------------------------- */
 const gasIcon = L.icon({
   iconUrl: "icons/gas-normal.svg",
@@ -86,7 +108,7 @@ const userIcon = L.icon({
 });
 
 /* -----------------------------------------
-   OBTENER UBICACIÓN
+   UBICACIÓN
 ----------------------------------------- */
 window.addEventListener("load", () => {
   navigator.geolocation.getCurrentPosition(
@@ -112,7 +134,7 @@ function setStatus(msg) {
 }
 
 /* -----------------------------------------
-   SKELETON LOADING
+   SKELETON
 ----------------------------------------- */
 function showSkeletons() {
   gasListEl.innerHTML = "";
@@ -163,7 +185,7 @@ async function loadStations() {
 }
 
 /* -----------------------------------------
-   NORMALIZAR DATOS
+   NORMALIZAR
 ----------------------------------------- */
 function normalizeStation(item) {
   const lat = parseFloat(item["Latitud"].trim().replace(",", "."));
@@ -182,7 +204,7 @@ function normalizeStation(item) {
 }
 
 /* -----------------------------------------
-   PROCESAR Y RENDERIZAR
+   PROCESAR
 ----------------------------------------- */
 function processStations() {
   setStatus(`Encontradas ${stationsRaw.length} gasolineras cerca de ti`);
@@ -190,16 +212,28 @@ function processStations() {
   applyFiltersAndRender();
 }
 
+/* -----------------------------------------
+   FILTRAR + RENDERIZAR
+----------------------------------------- */
 function applyFiltersAndRender() {
+  setStatus("");
+
   showSkeletons();
 
   setTimeout(() => {
+
     const fuelField = fuelFilterSelect.value || "Precio Gasolina 95 E5";
 
     stationsProcessed = stationsRaw
       .map(s => {
-        const rawPrice = s.raw[fuelField];
-        const price = rawPrice ? parseFloat(rawPrice.replace(",", ".")) : null;
+        let price = null;
+
+        if (fuelField === "AdBlue") {
+          price = getAdBluePrice(s.raw);
+        } else {
+          const rawPrice = s.raw[fuelField];
+          price = rawPrice ? parseFloat(rawPrice.replace(",", ".")) : null;
+        }
 
         return {
           ...s,
@@ -208,6 +242,13 @@ function applyFiltersAndRender() {
         };
       })
       .filter(s => s.price != null);
+
+    if (stationsProcessed.length === 0) {
+      setStatus("No hay datos de precio para este carburante en tu zona");
+      gasListEl.innerHTML = "";
+      markersLayer.clearLayers();
+      return;
+    }
 
     const cheapest = [...stationsProcessed].sort((a, b) => a.price - b.price)[0];
 
@@ -242,9 +283,6 @@ function renderStations(list, cheapest) {
 
   list.forEach((s, i) => {
 
-    /* -----------------------------------------
-       ANUNCIO CADA 5 GASOLINERAS
-    ----------------------------------------- */
     if (i > 0 && i % 5 === 0) {
       const ad = document.createElement("div");
       ad.innerHTML = `
@@ -264,9 +302,6 @@ function renderStations(list, cheapest) {
       }
     }
 
-    /* -----------------------------------------
-       TARJETA NORMAL
-    ----------------------------------------- */
     const item = document.createElement("article");
     item.className = "gas-item";
 
@@ -295,9 +330,8 @@ function renderStations(list, cheapest) {
   });
 }
 
-
 /* -----------------------------------------
-   TARJETA MÁS BARATA PREMIUM 2.0
+   TARJETA MÁS BARATA
 ----------------------------------------- */
 function renderBestCard(s, container) {
   container.innerHTML = `
@@ -327,24 +361,23 @@ function renderBestCard(s, container) {
 }
 
 /* -----------------------------------------
-   MARCADORES + LÍNEA HACIA LA MÁS BARATA
+   MARCADORES + LÍNEA
 ----------------------------------------- */
 function renderMapMarkers(cheapest) {
   markersLayer.clearLayers();
-  // AUTO-ZOOM INTELIGENTE
-if (userLocation && cheapest) {
-  const bounds = L.latLngBounds(
-    [userLocation.lat, userLocation.lng],
-    [cheapest.lat, cheapest.lng]
-  );
 
-  map.fitBounds(bounds, {
-    padding: [50, 50],
-    animate: true,
-    duration: 0.8
-  });
-}
+  if (userLocation && cheapest) {
+    const bounds = L.latLngBounds(
+      [userLocation.lat, userLocation.lng],
+      [cheapest.lat, cheapest.lng]
+    );
 
+    map.fitBounds(bounds, {
+      padding: [50, 50],
+      animate: true,
+      duration: 0.8
+    });
+  }
 
   stationsProcessed.slice(0, 80).forEach(s => {
     const iconToUse = s.isCheapest ? gasBestIcon : gasIcon;
@@ -363,12 +396,8 @@ if (userLocation && cheapest) {
       .bindPopup("Tu ubicación");
 
     userMarker.addTo(map);
-
   }
 
-  /* -----------------------------------------
-     DIBUJAR LÍNEA HACIA LA MÁS BARATA
-  ----------------------------------------- */
   if (bestRouteLine) {
     map.removeLayer(bestRouteLine);
   }
@@ -388,7 +417,7 @@ if (userLocation && cheapest) {
 }
 
 /* -----------------------------------------
-   DISTANCIA HAVERSINE
+   HAVERSINE
 ----------------------------------------- */
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371;
@@ -424,4 +453,3 @@ window.addEventListener("beforeinstallprompt", (e) => {
     });
   });
 });
-
